@@ -1,4 +1,4 @@
-# Pazar Araştırması — 2026 W38 (2026-09-14)
+# Pazar Araştırması — 2026 W39 (2026-09-14)
 
 > Not: `AGENTS.md`'de skor rubriği yok (yalnızca Expo v57.0.0 dokümanına işaret ediyor).
 > Bu yüzden aşağıdaki 5'li mini-rubrik kullanıldı — her kriter 1–5, toplam /25:

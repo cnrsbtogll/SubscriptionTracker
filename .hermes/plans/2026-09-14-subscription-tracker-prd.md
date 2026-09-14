@@ -8,7 +8,7 @@
 
 **Tech Stack:** Markdown only. No code.
 
-**Spec:** `research/2026-W38-market-report.md` (aday #1: gizlilik-öncelikli abonelik/yenileme takipçisi, 23/25)
+**Spec:** `research/2026-W39-market-report.md` (aday #1: gizlilik-öncelikli abonelik/yenileme takipçisi, 23/25)
 
 ## Global Constraints
 
@@ -26,12 +26,12 @@
 - Create: `strategy/2026-W39-prd.md` (başlık + bölüm iskeleti)
 
 **Interfaces:**
-- Consumes: `research/2026-W38-market-report.md` (5 aday, skorlar)
+- Consumes: `research/2026-W39-market-report.md` (5 aday, skorlar)
 - Produces: PRD iskeleti (9 bölüm başlığı) → Task 2 doldurur.
 
 - [ ] **Step 1: Rapor skorlarını doğrula**
 
-Run: `grep -n "TOPLAM\|Skor" research/2026-W38-market-report.md`
+Run: `grep -n "TOPLAM\|Skor" research/2026-W39-market-report.md`
 Expected: #1 aday 23/25 ile en yüksek; 5 adayın sırası 23/21/20/19/18.
 
 - [ ] **Step 2: PRD iskeletini yaz**
