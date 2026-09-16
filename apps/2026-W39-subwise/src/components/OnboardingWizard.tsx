@@ -1,23 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, radius } from '../../constants/theme';
 import { t } from '../i18n/strings';
-
-const TEMPLATES = [
-  { name: 'Netflix', icon: '🎬', price: 9.99, currency: 'USD' as const },
-  { name: 'Spotify', icon: '🎵', price: 5.99, currency: 'USD' as const },
-  { name: 'YouTube Premium', icon: '▶️', price: 13.99, currency: 'USD' as const },
-  { name: 'iCloud+', icon: '☁️', price: 0.99, currency: 'USD' as const },
-  { name: 'PlayStation Plus', icon: '🎮', price: 9.99, currency: 'USD' as const },
-  { name: 'Game Pass', icon: '🎯', price: 16.99, currency: 'USD' as const },
-  { name: 'VPN', icon: '🔒', price: 3.99, currency: 'USD' as const },
-];
+import { TEMPLATES, Template } from '../lib/templates';
 
 interface Props {
-  onComplete: (selected: typeof TEMPLATES) => void;
+  onComplete: (selected: Template[]) => void;
 }
 
 export function OnboardingWizard({ onComplete }: Props) {
+  const insets = useSafeAreaInsets();
   const [step, setStep] = useState(1);
   const [selected, setSelected] = useState<Set<number>>(new Set());
 
@@ -28,9 +21,11 @@ export function OnboardingWizard({ onComplete }: Props) {
     setSelected(next);
   };
 
+  const selectedTemplates = TEMPLATES.filter((_, i) => selected.has(i));
+
   if (step === 1) {
     return (
-      <View style={styles.container}>
+      <ScrollView style={[styles.container, { paddingTop: insets.top + spacing.xl }]} contentContainerStyle={styles.safeBottom}>
         <Text style={styles.stepLabel}>{t('onboarding.step1')}</Text>
         {TEMPLATES.map((tpl, i) => (
           <TouchableOpacity
@@ -40,6 +35,7 @@ export function OnboardingWizard({ onComplete }: Props) {
           >
             <Text style={styles.tplIcon}>{tpl.icon}</Text>
             <Text style={styles.tplName}>{tpl.name}</Text>
+            <Text style={styles.tplPrice}>{tpl.price} {tpl.currency}</Text>
             {selected.has(i) && <Text style={styles.check}>✓</Text>}
           </TouchableOpacity>
         ))}
@@ -50,31 +46,38 @@ export function OnboardingWizard({ onComplete }: Props) {
         >
           <Text style={styles.btnText}>{t('onboarding.start')}</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     );
   }
 
   if (step === 2) {
     return (
-      <View style={styles.container}>
+      <ScrollView style={[styles.container, { paddingTop: insets.top + spacing.xl }]} contentContainerStyle={styles.safeBottom}>
         <Text style={styles.stepLabel}>{t('onboarding.step2')}</Text>
-        <Text style={styles.hint}>Tutarlar varsayılan olarak bırakıldı. Bunu sonradan ayarlayabilirsin.</Text>
+        <Text style={styles.hint}>{t('onboarding.summary', { count: selected.size })}</Text>
+        {selectedTemplates.map((tpl) => (
+          <View key={tpl.name} style={styles.summaryRow}>
+            <Text style={styles.tplIcon}>{tpl.icon}</Text>
+            <Text style={styles.tplName}>{tpl.name}</Text>
+            <Text style={styles.tplPrice}>{tpl.price} {tpl.currency}/mo</Text>
+          </View>
+        ))}
         <TouchableOpacity style={styles.btn} onPress={() => setStep(3)}>
           <Text style={styles.btnText}>{t('onboarding.start')}</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     );
   }
 
   // step 3
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top + spacing.xl }]}>
       <Text style={styles.stepLabel}>{t('onboarding.step3')}</Text>
-      <Text style={styles.hint}>Yenileme hatırlatıcıları için bildirim izni gerekir.</Text>
-      <TouchableOpacity style={styles.btn} onPress={() => onComplete(TEMPLATES.filter((_, i) => selected.has(i)))}>
-        <Text style={styles.btnText}>{t('onboarding.done')}</Text>
+      <Text style={styles.hint}>{t('onboarding.permissionHint')}</Text>
+      <TouchableOpacity style={styles.btn} onPress={() => onComplete(selectedTemplates)}>
+        <Text style={styles.btnText}>{t('onboarding.enableNotifications')}</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => onComplete(TEMPLATES.filter((_, i) => selected.has(i)))}>
+      <TouchableOpacity onPress={() => onComplete(selectedTemplates)}>
         <Text style={styles.skip}>{t('onboarding.skip')}</Text>
       </TouchableOpacity>
     </View>
@@ -82,7 +85,8 @@ export function OnboardingWizard({ onComplete }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.lg, paddingTop: spacing.xl },
+  container: { flex: 1, backgroundColor: colors.background, padding: spacing.lg },
+  safeBottom: { paddingBottom: spacing.xl },
   stepLabel: { fontSize: 24, fontWeight: '700', color: colors.text, marginBottom: spacing.lg },
   hint: { fontSize: 14, color: colors.textSecondary, marginBottom: spacing.lg },
   templateRow: {
@@ -92,7 +96,13 @@ const styles = StyleSheet.create({
   selected: { borderColor: colors.primary, backgroundColor: colors.primaryLight },
   tplIcon: { fontSize: 22, marginRight: spacing.md },
   tplName: { flex: 1, fontSize: 16, color: colors.text },
+  tplPrice: { fontSize: 13, color: colors.textSecondary, marginRight: spacing.sm },
   check: { fontSize: 18, color: colors.primary, fontWeight: '700' },
+  summaryRow: {
+    flexDirection: 'row', alignItems: 'center', padding: spacing.md,
+    borderWidth: 1, borderColor: colors.border, borderRadius: radius.md, marginBottom: spacing.sm,
+    backgroundColor: colors.surface,
+  },
   btn: {
     backgroundColor: colors.primary, padding: spacing.md, borderRadius: radius.md,
     alignItems: 'center', marginTop: spacing.lg,

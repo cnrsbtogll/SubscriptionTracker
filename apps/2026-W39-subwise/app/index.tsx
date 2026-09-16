@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSubscriptions } from '../src/state/useSubscriptions';
@@ -12,6 +13,7 @@ import { daysUntil } from '../src/lib/renewals';
 
 export default function Dashboard() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { subs, loaded, atLimit } = useSubscriptions();
   const [showPaywall, setShowPaywall] = React.useState(false);
   const [hasOnboarded, setHasOnboarded] = React.useState<boolean | null>(null);
@@ -56,7 +58,11 @@ export default function Dashboard() {
           )}
         />
       )}
-      <TouchableOpacity style={styles.fab} onPress={handleAdd} activeOpacity={0.8}>
+      <TouchableOpacity
+        style={[styles.fab, { bottom: insets.bottom + spacing.lg }]}
+        onPress={handleAdd}
+        activeOpacity={0.8}
+      >
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
       {showPaywall && <PaywallSheet onDismiss={() => setShowPaywall(false)} />}
@@ -71,7 +77,7 @@ const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
     right: spacing.lg,
-    bottom: spacing.lg,
+    bottom: spacing.lg, // insets.bottom ile override edilir
     width: 56,
     height: 56,
     borderRadius: 28,

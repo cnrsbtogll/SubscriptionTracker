@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications';
-import { Subscription, Cycle } from '../db/schema';
+import { Subscription } from '../db/schema';
 import { reminderDaysBefore, daysUntil } from './renewals';
+import { t, getLanguage } from '../i18n/strings';
 
 export async function requestNotificationPermission(): Promise<boolean> {
   const { status: existing } = await Notifications.getPermissionsAsync();
@@ -18,10 +19,13 @@ export async function scheduleRenewalReminders(sub: Subscription): Promise<strin
     const trigger = new Date(sub.nextRenewal);
     trigger.setDate(trigger.getDate() - d);
     trigger.setHours(9, 0, 0, 0); // sabah 9
+    const lang = getLanguage();
     const id = await Notifications.scheduleNotificationAsync({
       content: {
         title: `${sub.icon} ${sub.name}`,
-        body: d === 1 ? 'Yarın yenileniyor!' : `${d} gün sonra yenileniyor!`,
+        body: d === 1
+          ? t('notification.reminderTomorrow', { name: sub.name })
+          : t('notification.reminderDays', { name: sub.name, count: d }),
       },
       trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: trigger },
     });

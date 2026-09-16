@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, radius } from '../../constants/theme';
 import { t } from '../i18n/strings';
 
@@ -8,9 +9,10 @@ interface Props {
 }
 
 export function PaywallSheet({ onDismiss }: Props) {
+  const insets = useSafeAreaInsets();
   return (
     <View style={styles.overlay}>
-      <View style={styles.sheet}>
+      <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, spacing.lg) }]}>
         <Text style={styles.icon}>🔒</Text>
         <Text style={styles.title}>{t('form.paywallTitle')}</Text>
         <Text style={styles.message}>{t('form.paywallMessage')}</Text>

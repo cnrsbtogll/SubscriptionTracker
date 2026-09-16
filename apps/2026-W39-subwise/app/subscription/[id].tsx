@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, ScrollView, Alert, StyleSheet, Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSubscriptions } from '../../src/state/useSubscriptions';
 import { t } from '../../src/i18n/strings';
 import { colors, spacing, radius } from '../../constants/theme';
 import { Currency, Cycle, Subscription } from '../../src/db/schema';
 import { nextRenewalDate, daysUntil, formatCycleLabel } from '../../src/lib/renewals';
 import { scheduleRenewalReminders } from '../../src/lib/notifications';
+import { defaultPriceFor } from '../../src/lib/templates';
 
 const CURRENCIES: Currency[] = ['TRY', 'USD', 'EUR', 'GBP'];
 const CYCLES: Cycle[] = ['weekly', 'monthly', 'quarterly', 'semiannual', 'yearly'];
@@ -17,6 +20,7 @@ const EMOJIS = ['📺', '🎵', '🎮', '☁️', '🔒', '📰', '🏋️', '�
 
 export default function SubscriptionForm() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { subs, add, update, remove } = useSubscriptions();
   const isNew = id === 'new';
@@ -34,6 +38,55 @@ export default function SubscriptionForm() {
 
   const previewDate = new Date(nextDate);
   const days = daysUntil(nextDate);
+
+  // --- Default fiyat onayı: bilinen servis girildiğinde kullanıcıya göster ---
+  const applyDefaultPrice = async () => {
+    const tpl = defaultPriceFor(name);
+    if (!tpl) return;
+    const msg = t('form.priceConfirmMessage', {
+      name: tpl.name,
+      price: String(tpl.price),
+      currency: tpl.currency,
+      cycle: formatCycleLabel('monthly', (k: string) => t(k)),
+    });
+    Alert.alert(t('form.priceConfirmTitle'), msg, [
+      {
+        text: t('form.priceConfirmEdit'),
+        style: 'cancel',
+        onPress: () => {},
+      },
+      {
+        text: t('form.priceConfirmOk'),
+        onPress: () => {
+          setPrice(String(tpl.price));
+          setCurrency(tpl.currency);
+        },
+      },
+    ]);
+  };
+
+  const handleNameChange = (text: string) => {
+    setName(text);
+    // Sadece isim alanı kullanıcı tarafından değiştirildiyse ve fiyat boşsa öner
+    if (!existing && !price) {
+      const tpl = defaultPriceFor(text);
+      if (tpl) {
+        setPrice(String(tpl.price));
+        setCurrency(tpl.currency);
+      }
+    }
+  };
+
+  useEffect(() => {
+    // Edit modunda mevcut fiyatı koru; sadece yeni abonelikte default öner
+    if (!existing && name.trim() && price === '' ) {
+      const tpl = defaultPriceFor(name);
+      if (tpl) {
+        setPrice(String(tpl.price));
+        setCurrency(tpl.currency);
+      }
+    }
+  }, [name, existing, price]);
 
   const handleSave = async () => {
     if (!name.trim() || !price) return;
@@ -69,103 +122,126 @@ export default function SubscriptionForm() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.title}>{isNew ? t('form.title') : t('form.editTitle')}</Text>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: colors.background }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 8 : 0}
+    >
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + spacing.xl }]}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Text style={styles.title}>{isNew ? t('form.title') : t('form.editTitle')}</Text>
 
-      <Text style={styles.label}>{t('form.name')}</Text>
-      <TextInput style={styles.input} value={name} onChangeText={setName} placeholder="Netflix" />
+        <Text style={styles.label}>{t('form.name')}</Text>
+        <TextInput
+          style={styles.input}
+          value={name}
+          onChangeText={handleNameChange}
+          placeholder="Netflix"
+          autoFocus={isNew}
+        />
 
-      <Text style={styles.label}>{t('form.price')}</Text>
-      <TextInput
-        style={styles.input}
-        value={price}
-        onChangeText={setPrice}
-        keyboardType="numeric"
-        placeholder="0.00"
-      />
-
-      <Text style={styles.label}>{t('form.currency')}</Text>
-      <View style={styles.chipRow}>
-        {CURRENCIES.map((c) => (
-          <TouchableOpacity
-            key={c}
-            style={[styles.chip, currency === c && styles.chipActive]}
-            onPress={() => setCurrency(c)}
-          >
-            <Text style={[styles.chipText, currency === c && styles.chipTextActive]}>{c}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      <Text style={styles.label}>{t('form.cycle')}</Text>
-      <View style={styles.chipRow}>
-        {CYCLES.map((c) => (
-          <TouchableOpacity
-            key={c}
-            style={[styles.chip, cycle === c && styles.chipActive]}
-            onPress={() => {
-              setCycle(c);
-              setNextDate(nextRenewalDate(new Date(), c).toISOString());
-            }}
-          >
-            <Text style={[styles.chipText, cycle === c && styles.chipTextActive]}>
-              {formatCycleLabel(c, (k) => t(k))}
+        <Text style={styles.label}>{t('form.price')}</Text>
+        <TextInput
+          style={styles.input}
+          value={price}
+          onChangeText={setPrice}
+          keyboardType="decimal-pad"
+          placeholder="0.00"
+        />
+        {price !== '' && defaultPriceFor(name) && (
+          <TouchableOpacity onPress={applyDefaultPrice}>
+            <Text style={styles.defaultHint}>
+              {t('form.priceConfirmTitle')}: {name.trim()} → {defaultPriceFor(name)?.price} {defaultPriceFor(name)?.currency}
             </Text>
           </TouchableOpacity>
-        ))}
-      </View>
+        )}
 
-      <Text style={styles.label}>{t('form.icon')}</Text>
-      <View style={styles.chipRow}>
-        {EMOJIS.map((e) => (
-          <TouchableOpacity
-            key={e}
-            style={[styles.chip, icon === e && styles.chipActive]}
-            onPress={() => setIcon(e)}
-          >
-            <Text style={styles.chipText}>{e}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+        <Text style={styles.label}>{t('form.currency')}</Text>
+        <View style={styles.chipRow}>
+          {CURRENCIES.map((c) => (
+            <TouchableOpacity
+              key={c}
+              style={[styles.chip, currency === c && styles.chipActive]}
+              onPress={() => setCurrency(c)}
+            >
+              <Text style={[styles.chipText, currency === c && styles.chipTextActive]}>{c}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
-      <Text style={styles.label}>{t('form.color')}</Text>
-      <View style={styles.chipRow}>
-        {COLORS.map((c) => (
-          <TouchableOpacity
-            key={c}
-            style={[styles.colorDot, { backgroundColor: c }, color === c && styles.colorActive]}
-            onPress={() => setColor(c)}
-          />
-        ))}
-      </View>
+        <Text style={styles.label}>{t('form.cycle')}</Text>
+        <View style={styles.chipRow}>
+          {CYCLES.map((c) => (
+            <TouchableOpacity
+              key={c}
+              style={[styles.chip, cycle === c && styles.chipActive]}
+              onPress={() => {
+                setCycle(c);
+                setNextDate(nextRenewalDate(new Date(), c).toISOString());
+              }}
+            >
+              <Text style={[styles.chipText, cycle === c && styles.chipTextActive]}>
+                {formatCycleLabel(c, (k) => t(k))}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
-      <Text style={styles.label}>{t('form.notes')}</Text>
-      <TextInput
-        style={[styles.input, styles.notesInput]}
-        value={notes}
-        onChangeText={setNotes}
-        multiline
-        numberOfLines={3}
-      />
+        <Text style={styles.label}>{t('form.icon')}</Text>
+        <View style={styles.chipRow}>
+          {EMOJIS.map((e) => (
+            <TouchableOpacity
+              key={e}
+              style={[styles.chip, icon === e && styles.chipActive]}
+              onPress={() => setIcon(e)}
+            >
+              <Text style={styles.chipText}>{e}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
-      <View style={styles.preview}>
-        <Text style={styles.previewText}>
-          {t('form.nextRenewalPreview', {
-            date: previewDate.toLocaleDateString('tr-TR'),
-          })}
-        </Text>
-      </View>
+        <Text style={styles.label}>{t('form.color')}</Text>
+        <View style={styles.chipRow}>
+          {COLORS.map((c) => (
+            <TouchableOpacity
+              key={c}
+              style={[styles.colorDot, { backgroundColor: c }, color === c && styles.colorActive]}
+              onPress={() => setColor(c)}
+            />
+          ))}
+        </View>
 
-      <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
-        <Text style={styles.saveBtnText}>{t('form.save')}</Text>
-      </TouchableOpacity>
+        <Text style={styles.label}>{t('form.notes')}</Text>
+        <TextInput
+          style={[styles.input, styles.notesInput]}
+          value={notes}
+          onChangeText={setNotes}
+          multiline
+          numberOfLines={3}
+        />
 
-      {!isNew && (
-        <TouchableOpacity style={styles.deleteBtn} onPress={handleDelete}>
-          <Text style={styles.deleteBtnText}>{t('form.delete')}</Text>
+        <View style={styles.preview}>
+          <Text style={styles.previewText}>
+            {t('form.nextRenewalPreview', {
+              date: previewDate.toLocaleDateString('tr-TR'),
+            })}
+          </Text>
+        </View>
+
+        <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
+          <Text style={styles.saveBtnText}>{t('form.save')}</Text>
         </TouchableOpacity>
-      )}
-    </ScrollView>
+
+        {!isNew && (
+          <TouchableOpacity style={styles.deleteBtn} onPress={handleDelete}>
+            <Text style={styles.deleteBtnText}>{t('form.delete')}</Text>
+          </TouchableOpacity>
+        )}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -203,4 +279,5 @@ const styles = StyleSheet.create({
   saveBtnText: { color: colors.white, fontSize: 16, fontWeight: '600' },
   deleteBtn: { padding: spacing.md, alignItems: 'center', marginTop: spacing.sm },
   deleteBtnText: { color: colors.danger, fontSize: 16 },
+  defaultHint: { fontSize: 13, color: colors.primary, marginTop: spacing.xs, textDecorationLine: 'underline' },
 });

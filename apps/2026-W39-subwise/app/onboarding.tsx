@@ -6,18 +6,19 @@ import { OnboardingWizard } from '../src/components/OnboardingWizard';
 import { useSubscriptions } from '../src/state/useSubscriptions';
 import { Currency } from '../src/db/schema';
 import { nextRenewalDate } from '../src/lib/renewals';
+import { Template } from '../src/lib/templates';
 
 export default function OnboardingScreen() {
   const router = useRouter();
   const add = useSubscriptions((s) => s.add);
 
-  const handleComplete = async (templates: { name: string; icon: string; price: number; currency: Currency }[]) => {
+  const handleComplete = async (templates: Template[]) => {
     for (const tpl of templates) {
       await add({
         id: Math.random().toString(36) + Date.now().toString(),
         name: tpl.name,
         price: tpl.price,
-        currency: tpl.currency,
+        currency: tpl.currency as Currency,
         cycle: 'monthly',
         nextRenewal: nextRenewalDate(new Date(), 'monthly').toISOString(),
         color: '#6366F1',

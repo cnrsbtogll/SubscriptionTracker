@@ -21,7 +21,7 @@ export function TotalCard({ subs }: Props) {
     <View style={styles.card}>
       <Text style={styles.label}>{t('dashboard.total')}</Text>
       {entries.length === 0 ? (
-        <Text style={styles.amount}>₺0</Text>
+        <Text style={styles.amount}>0 TRY</Text>
       ) : (
         entries.map(([currency, total]) => (
           <Text key={currency} style={styles.amount}>
