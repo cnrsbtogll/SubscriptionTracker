@@ -2,8 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, spacing, radius } from '../../constants/theme';
 import { t } from '../i18n/strings';
-import { Subscription } from '../db/schema';
+import { Subscription, Currency } from '../db/schema';
 import { monthlyEquivalent } from '../lib/renewals';
+import { formatPrice } from '../lib/currencies';
 
 interface Props {
   subs: Subscription[];
@@ -21,11 +22,11 @@ export function TotalCard({ subs }: Props) {
     <View style={styles.card}>
       <Text style={styles.label}>{t('dashboard.total')}</Text>
       {entries.length === 0 ? (
-        <Text style={styles.amount}>0 TRY</Text>
+        <Text style={styles.amount}>₺0.00</Text>
       ) : (
         entries.map(([currency, total]) => (
           <Text key={currency} style={styles.amount}>
-            {currency} {total.toFixed(2)}
+            {formatPrice(total.toFixed(2), currency as Currency)}
             <Text style={styles.period}>{t('dashboard.monthly')}</Text>
           </Text>
         ))

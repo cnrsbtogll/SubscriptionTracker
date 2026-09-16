@@ -12,6 +12,7 @@ import { Currency, Cycle, Subscription } from '../../src/db/schema';
 import { nextRenewalDate, daysUntil, formatCycleLabel, autoAdvanceOverdue } from '../../src/lib/renewals';
 import { scheduleRenewalReminders } from '../../src/lib/notifications';
 import { defaultPriceFor } from '../../src/lib/templates';
+import { currencySymbol, formatPrice } from '../../src/lib/currencies';
 
 const CURRENCIES: Currency[] = ['TRY', 'USD', 'EUR', 'GBP'];
 const CYCLES: Cycle[] = ['weekly', 'monthly', 'quarterly', 'semiannual', 'yearly', 'custom'];
@@ -219,7 +220,7 @@ export default function SubscriptionForm() {
         {price !== '' && defaultPriceFor(name) && (
           <TouchableOpacity onPress={applyDefaultPrice}>
             <Text style={styles.defaultHint}>
-              {t('form.priceConfirmTitle')}: {name.trim()} → {defaultPriceFor(name)?.price} {defaultPriceFor(name)?.currency}
+              {t('form.priceConfirmTitle')}: {name.trim()} → {formatPrice(defaultPriceFor(name)!.price, defaultPriceFor(name)!.currency)}
             </Text>
           </TouchableOpacity>
         )}
@@ -232,7 +233,7 @@ export default function SubscriptionForm() {
               style={[styles.chip, currency === c && styles.chipActive]}
               onPress={() => setCurrency(c)}
             >
-              <Text style={[styles.chipText, currency === c && styles.chipTextActive]}>{c}</Text>
+              <Text style={[styles.chipText, currency === c && styles.chipTextActive]}>{currencySymbol(c)} {c}</Text>
             </TouchableOpacity>
           ))}
         </View>

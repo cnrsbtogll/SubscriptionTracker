@@ -13,6 +13,7 @@ import { TEMPLATES, Template } from '../lib/templates';
 import { Subscription } from '../db/schema';
 import { colors, spacing, radius } from '../../constants/theme';
 import { t } from '../i18n/strings';
+import { formatPrice } from '../lib/currencies';
 
 interface Props {
   visible: boolean;
@@ -57,11 +58,11 @@ export function TemplatePickerSheet({ visible, existingSubs, onSelect, onDismiss
                   <Text style={styles.cardName}>{tpl.name}</Text>
                   {existing ? (
                     <Text style={styles.cardSub}>
-                      {existing.price} {existing.currency} · {t('picker.alreadyAdded')}
+                      {formatPrice(existing.price, existing.currency)} · {t('picker.alreadyAdded')}
                     </Text>
                   ) : (
                     <Text style={styles.cardSub}>
-                      {tpl.price} {tpl.currency}
+                      {formatPrice(tpl.price, tpl.currency)}
                     </Text>
                   )}
                 </View>

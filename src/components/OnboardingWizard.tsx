@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, radius } from '../../constants/theme';
 import { t } from '../i18n/strings';
 import { TEMPLATES, Template } from '../lib/templates';
+import { formatPrice } from '../lib/currencies';
 
 interface Props {
   onComplete: (selected: Template[]) => void;
@@ -35,7 +36,7 @@ export function OnboardingWizard({ onComplete }: Props) {
           >
             <Text style={styles.tplIcon}>{tpl.icon}</Text>
             <Text style={styles.tplName}>{tpl.name}</Text>
-            <Text style={styles.tplPrice}>{tpl.price} {tpl.currency}</Text>
+            <Text style={styles.tplPrice}>{formatPrice(tpl.price, tpl.currency)}</Text>
             {selected.has(i) && <Text style={styles.check}>✓</Text>}
           </TouchableOpacity>
         ))}
@@ -59,7 +60,7 @@ export function OnboardingWizard({ onComplete }: Props) {
           <View key={tpl.name} style={styles.summaryRow}>
             <Text style={styles.tplIcon}>{tpl.icon}</Text>
             <Text style={styles.tplName}>{tpl.name}</Text>
-            <Text style={styles.tplPrice}>{tpl.price} {tpl.currency}/mo</Text>
+            <Text style={styles.tplPrice}>{formatPrice(tpl.price, tpl.currency)}/mo</Text>
           </View>
         ))}
         <TouchableOpacity style={styles.btn} onPress={() => setStep(3)}>

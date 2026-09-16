@@ -4,6 +4,7 @@ import { colors, spacing, radius } from '../../constants/theme';
 import { t } from '../i18n/strings';
 import { Subscription } from '../db/schema';
 import { daysUntil, formatCycleLabel } from '../lib/renewals';
+import { formatPrice } from '../lib/currencies';
 
 interface Props {
   sub: Subscription;
@@ -42,7 +43,7 @@ export function SubscriptionRow({ sub, onPress }: Props) {
       <View style={styles.info}>
         <Text style={styles.name} numberOfLines={1}>{sub.name}</Text>
         <Text style={styles.meta}>
-          {sub.price} {sub.currency} · {formatCycleLabel(sub.cycle, (k) => t(k))}
+          {formatPrice(sub.price, sub.currency)} · {formatCycleLabel(sub.cycle, (k) => t(k))}
         </Text>
       </View>
       <View style={[styles.badge, { backgroundColor: badgeColor }]}>
