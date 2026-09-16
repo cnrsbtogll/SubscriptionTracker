@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { Subscription } from '../db/schema';
 import { loadSubscriptions, saveSubscriptions } from '../db/storage';
 import { LIMIT_FREE } from '../lib/constants';
+import { autoAdvanceOverdue } from '../lib/renewals';
 
 interface SubState {
   subs: Subscription[];
@@ -17,7 +18,19 @@ export const useSubscriptions = create<SubState>((set, get) => ({
   subs: [],
   loaded: false,
   load: async () => {
-    const subs = await loadSubscriptions();
+    const rawSubs = await loadSubscriptions();
+    let hasChanges = false;
+    const subs = rawSubs.map((s) => {
+      const updatedDate = autoAdvanceOverdue(s.nextRenewal, s.cycle, s.customDays);
+      if (updatedDate !== s.nextRenewal) {
+        hasChanges = true;
+        return { ...s, nextRenewal: updatedDate };
+      }
+      return s;
+    });
+    if (hasChanges) {
+      await saveSubscriptions(subs);
+    }
     set({ subs, loaded: true });
   },
   add: async (sub) => {

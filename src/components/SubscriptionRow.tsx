@@ -20,10 +20,18 @@ export function SubscriptionRow({ sub, onPress }: Props) {
     badgeColor = colors.danger;
   } else if (days === 0) {
     badgeText = t('dashboard.today');
-    badgeColor = colors.warning;
+    badgeColor = colors.danger;
   } else {
-    badgeText = t('dashboard.daysLeft', { count: days });
-    badgeColor = days <= 3 ? colors.warning : colors.success;
+    badgeText = days === 1
+      ? t('dashboard.daysLeft', { count: 1 })
+      : t('dashboard.daysLeft_plural', { count: days });
+    if (days <= 3) {
+      badgeColor = colors.danger;
+    } else if (days <= 7) {
+      badgeColor = colors.warning;
+    } else {
+      badgeColor = colors.success;
+    }
   }
 
   return (

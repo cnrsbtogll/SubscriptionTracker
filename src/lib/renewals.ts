@@ -41,6 +41,48 @@ export function reminderDaysBefore(cycle: Cycle): number[] {
   return [7, 1];
 }
 
+export function autoAdvanceOverdue(nextRenewalStr: string, cycle: Cycle, customDays?: number): string {
+  if (!nextRenewalStr) return new Date().toISOString();
+  const target = new Date(nextRenewalStr);
+  if (isNaN(target.getTime())) return new Date().toISOString();
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // If target date is strictly in the past (before today 00:00:00)
+  while (target < today) {
+    if (cycle === 'weekly') {
+      target.setDate(target.getDate() + 7);
+    } else if (cycle === 'monthly') {
+      const day = target.getDate();
+      target.setMonth(target.getMonth() + 1);
+      const maxDay = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+      target.setDate(Math.min(day, maxDay));
+    } else if (cycle === 'quarterly') {
+      const day = target.getDate();
+      target.setMonth(target.getMonth() + 3);
+      const maxDay = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+      target.setDate(Math.min(day, maxDay));
+    } else if (cycle === 'semiannual') {
+      const day = target.getDate();
+      target.setMonth(target.getMonth() + 6);
+      const maxDay = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+      target.setDate(Math.min(day, maxDay));
+    } else if (cycle === 'yearly') {
+      const day = target.getDate();
+      target.setFullYear(target.getFullYear() + 1);
+      const maxDay = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+      target.setDate(Math.min(day, maxDay));
+    } else if (cycle === 'custom') {
+      const days = customDays ?? 30;
+      target.setDate(target.getDate() + (days > 0 ? days : 30));
+    } else {
+      break;
+    }
+  }
+  return target.toISOString();
+}
+
 export function formatCycleLabel(cycle: Cycle, t: (key: string) => string, customDays?: number): string {
   if (cycle === 'custom') return `${customDays ?? '?'} ${t('cycle.days')}`;
   return t(`cycle.${cycle}`);

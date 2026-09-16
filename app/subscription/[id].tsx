@@ -9,7 +9,7 @@ import { useSubscriptions } from '../../src/state/useSubscriptions';
 import { t } from '../../src/i18n/strings';
 import { colors, spacing, radius } from '../../constants/theme';
 import { Currency, Cycle, Subscription } from '../../src/db/schema';
-import { nextRenewalDate, daysUntil, formatCycleLabel } from '../../src/lib/renewals';
+import { nextRenewalDate, daysUntil, formatCycleLabel, autoAdvanceOverdue } from '../../src/lib/renewals';
 import { scheduleRenewalReminders } from '../../src/lib/notifications';
 import { defaultPriceFor } from '../../src/lib/templates';
 
@@ -45,7 +45,9 @@ export default function SubscriptionForm() {
     existing?.cycle ?? (tplCycle as Cycle) ?? 'monthly'
   );
   const [nextDate, setNextDate] = useState(
-    existing?.nextRenewal ?? nextRenewalDate(new Date(), (tplCycle as Cycle) ?? 'monthly').toISOString()
+    existing?.nextRenewal
+      ? autoAdvanceOverdue(existing.nextRenewal, existing.cycle, existing.customDays)
+      : nextRenewalDate(new Date(), (tplCycle as Cycle) ?? 'monthly').toISOString()
   );
   const [color, setColor] = useState(existing?.color ?? tplColor ?? COLORS[0]);
   const [icon, setIcon] = useState(existing?.icon ?? tplIcon ?? '📱');
@@ -56,6 +58,23 @@ export default function SubscriptionForm() {
 
   const previewDate = new Date(nextDate);
   const days = daysUntil(nextDate);
+
+  // --- Tarih parçalarını ayarla (◀/▶ butonları) ---
+  const adjustDate = (field: 'day' | 'month' | 'year', delta: number) => {
+    const d = new Date(nextDate);
+    if (field === 'day') {
+      d.setDate(d.getDate() + delta);
+    } else if (field === 'month') {
+      const day = d.getDate();
+      d.setMonth(d.getMonth() + delta);
+      // Ay taşmasını önle (ör. 31 Mart + 1 ay → 30 Nisan)
+      const maxDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+      d.setDate(Math.min(day, maxDay));
+    } else {
+      d.setFullYear(d.getFullYear() + delta);
+    }
+    setNextDate(d.toISOString());
+  };
 
   // --- Default fiyat onayı: bilinen servis girildiğinde kullanıcıya göster ---
   const applyDefaultPrice = async () => {
@@ -254,6 +273,41 @@ export default function SubscriptionForm() {
           </>
         )}
 
+        <Text style={styles.label}>{t('form.nextRenewal')}</Text>
+        <View style={styles.datePicker}>
+          {(['day', 'month', 'year'] as const).map((field) => {
+            const d = new Date(nextDate);
+            const val = field === 'day'
+              ? d.toLocaleDateString('tr-TR', { day: '2-digit' })
+              : field === 'month'
+              ? d.toLocaleDateString('tr-TR', { month: 'long' })
+              : d.getFullYear().toString();
+            return (
+              <View key={field} style={styles.dateField}>
+                <TouchableOpacity onPress={() => adjustDate(field, 1)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                  <Text style={styles.dateArrow}>▲</Text>
+                </TouchableOpacity>
+                <Text style={styles.dateValue}>{val}</Text>
+                <TouchableOpacity onPress={() => adjustDate(field, -1)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                  <Text style={styles.dateArrow}>▼</Text>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
+        </View>
+        <Text style={[
+          styles.daysLeft,
+          days <= 3 && { color: colors.danger },
+          days >= 4 && days <= 7 && { color: colors.warning },
+          days > 7 && { color: colors.success },
+        ]}>
+          {days <= 0
+            ? t('dashboard.overdue')
+            : days === 1
+            ? t('dashboard.daysLeft', { count: 1 })
+            : t('dashboard.daysLeft_plural', { count: days })}
+        </Text>
+
         <Text style={styles.label}>{t('form.icon')}</Text>
         <View style={styles.chipRow}>
           {(EMOJIS.includes(icon) ? EMOJIS : [icon, ...EMOJIS]).map((e) => (
@@ -286,14 +340,6 @@ export default function SubscriptionForm() {
           multiline
           numberOfLines={3}
         />
-
-        <View style={styles.preview}>
-          <Text style={styles.previewText}>
-            {t('form.nextRenewalPreview', {
-              date: previewDate.toLocaleDateString('tr-TR'),
-            })}
-          </Text>
-        </View>
 
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
           <Text style={styles.saveBtnText}>{t('form.save')}</Text>
@@ -336,6 +382,40 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface, borderRadius: radius.md,
   },
   previewText: { fontSize: 14, color: colors.textSecondary, textAlign: 'center' },
+  datePicker: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    padding: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  dateField: {
+    alignItems: 'center',
+    paddingHorizontal: spacing.sm,
+  },
+  dateArrow: {
+    fontSize: 18,
+    color: colors.primary,
+    paddingVertical: spacing.xs,
+    fontWeight: '700',
+  },
+  dateValue: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+    marginVertical: 4,
+    textTransform: 'capitalize',
+  },
+  daysLeft: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginTop: spacing.sm,
+  },
   saveBtn: {
     backgroundColor: colors.primary, padding: spacing.md,
     borderRadius: radius.md, alignItems: 'center', marginTop: spacing.lg,
