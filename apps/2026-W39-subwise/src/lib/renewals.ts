@@ -1,6 +1,6 @@
 import { Cycle } from '../db/schema';
 
-const CYCLE_DAYS: Record<Cycle, number> = {
+const CYCLE_DAYS: Record<Exclude<Cycle, 'custom'>, number> = {
   weekly: 7,
   monthly: 30,
   quarterly: 91,
@@ -8,7 +8,7 @@ const CYCLE_DAYS: Record<Cycle, number> = {
   yearly: 365,
 };
 
-const CYCLE_MONTHS: Record<Cycle, number> = {
+const CYCLE_MONTHS: Record<Exclude<Cycle, 'custom'>, number> = {
   weekly: 7 / 30,
   monthly: 1,
   quarterly: 3,
@@ -16,9 +16,9 @@ const CYCLE_MONTHS: Record<Cycle, number> = {
   yearly: 12,
 };
 
-export function nextRenewalDate(from: Date, cycle: Cycle): Date {
+export function nextRenewalDate(from: Date, cycle: Cycle, customDays?: number): Date {
   const d = new Date(from);
-  const days = CYCLE_DAYS[cycle];
+  const days = cycle === 'custom' ? (customDays ?? 30) : CYCLE_DAYS[cycle];
   d.setDate(d.getDate() + days);
   return d;
 }
@@ -31,15 +31,17 @@ export function daysUntil(dateStr: string): number {
   return Math.ceil((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-export function monthlyEquivalent(price: number, cycle: Cycle): number {
+export function monthlyEquivalent(price: number, cycle: Cycle, customDays?: number): number {
+  if (cycle === 'custom') return price / ((customDays ?? 30) / 30);
   return price / CYCLE_MONTHS[cycle];
 }
 
 export function reminderDaysBefore(cycle: Cycle): number[] {
-  if (cycle === 'weekly' || cycle === 'monthly') return [1];
+  if (cycle === 'weekly' || cycle === 'monthly' || cycle === 'custom') return [1];
   return [7, 1];
 }
 
-export function formatCycleLabel(cycle: Cycle, t: (key: string) => string): string {
+export function formatCycleLabel(cycle: Cycle, t: (key: string) => string, customDays?: number): string {
+  if (cycle === 'custom') return `${customDays ?? '?'} ${t('cycle.days')}`;
   return t(`cycle.${cycle}`);
 }

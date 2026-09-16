@@ -14,27 +14,45 @@ import { scheduleRenewalReminders } from '../../src/lib/notifications';
 import { defaultPriceFor } from '../../src/lib/templates';
 
 const CURRENCIES: Currency[] = ['TRY', 'USD', 'EUR', 'GBP'];
-const CYCLES: Cycle[] = ['weekly', 'monthly', 'quarterly', 'semiannual', 'yearly'];
+const CYCLES: Cycle[] = ['weekly', 'monthly', 'quarterly', 'semiannual', 'yearly', 'custom'];
 const COLORS = ['#6366F1', '#EC4899', '#F59E0B', '#10B981', '#3B82F6', '#EF4444', '#8B5CF6', '#06B6D4'];
 const EMOJIS = ['📺', '🎵', '🎮', '☁️', '🔒', '📰', '🏋️', '📧', '🎥', '📱'];
 
 export default function SubscriptionForm() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, tplName, tplPrice, tplCurrency, tplCycle, tplColor, tplIcon } =
+    useLocalSearchParams<{
+      id: string;
+      tplName?: string;
+      tplPrice?: string;
+      tplCurrency?: string;
+      tplCycle?: string;
+      tplColor?: string;
+      tplIcon?: string;
+    }>();
   const { subs, add, update, remove } = useSubscriptions();
   const isNew = id === 'new';
 
   const existing = !isNew ? subs.find((s) => s.id === id) : null;
 
-  const [name, setName] = useState(existing?.name ?? '');
-  const [price, setPrice] = useState(existing?.price?.toString() ?? '');
-  const [currency, setCurrency] = useState<Currency>(existing?.currency ?? 'TRY');
-  const [cycle, setCycle] = useState<Cycle>(existing?.cycle ?? 'monthly');
-  const [nextDate, setNextDate] = useState(existing?.nextRenewal ?? nextRenewalDate(new Date(), 'monthly').toISOString());
-  const [color, setColor] = useState(existing?.color ?? COLORS[0]);
-  const [icon, setIcon] = useState(existing?.icon ?? '📱');
+  const [name, setName] = useState(existing?.name ?? tplName ?? '');
+  const [price, setPrice] = useState(existing?.price?.toString() ?? tplPrice ?? '');
+  const [currency, setCurrency] = useState<Currency>(
+    existing?.currency ?? (tplCurrency as Currency) ?? 'TRY'
+  );
+  const [cycle, setCycle] = useState<Cycle>(
+    existing?.cycle ?? (tplCycle as Cycle) ?? 'monthly'
+  );
+  const [nextDate, setNextDate] = useState(
+    existing?.nextRenewal ?? nextRenewalDate(new Date(), (tplCycle as Cycle) ?? 'monthly').toISOString()
+  );
+  const [color, setColor] = useState(existing?.color ?? tplColor ?? COLORS[0]);
+  const [icon, setIcon] = useState(existing?.icon ?? tplIcon ?? '📱');
   const [notes, setNotes] = useState(existing?.notes ?? '');
+  const [customDays, setCustomDays] = useState<string>(
+    existing?.customDays?.toString() ?? '30'
+  );
 
   const previewDate = new Date(nextDate);
   const days = daysUntil(nextDate);
@@ -77,6 +95,32 @@ export default function SubscriptionForm() {
     }
   };
 
+  // Template params değişince (farklı servis seçilince) state'i sıfırla
+  useEffect(() => {
+    if (!isNew) return;
+    if (!tplName) {
+      // "Diğer" seçildi → boş form
+      setName('');
+      setPrice('');
+      setCurrency('TRY');
+      setCycle('monthly');
+      setNextDate(nextRenewalDate(new Date(), 'monthly').toISOString());
+      setColor(COLORS[0]);
+      setIcon('📱');
+      setNotes('');
+      return;
+    }
+    setName(tplName);
+    if (tplPrice) setPrice(tplPrice);
+    if (tplCurrency) setCurrency(tplCurrency as Currency);
+    if (tplCycle) {
+      setCycle(tplCycle as Cycle);
+      setNextDate(nextRenewalDate(new Date(), tplCycle as Cycle).toISOString());
+    }
+    if (tplColor) setColor(tplColor);
+    if (tplIcon) setIcon(tplIcon);
+  }, [tplName]);
+
   useEffect(() => {
     // Edit modunda mevcut fiyatı koru; sadece yeni abonelikte default öner
     if (!existing && name.trim() && price === '' ) {
@@ -96,6 +140,7 @@ export default function SubscriptionForm() {
       price: parseFloat(price),
       currency,
       cycle,
+      customDays: cycle === 'custom' ? parseInt(customDays, 10) || 30 : undefined,
       nextRenewal: nextDate,
       color,
       icon,
@@ -124,13 +169,14 @@ export default function SubscriptionForm() {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: colors.background }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 8 : 0}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
       <ScrollView
         style={styles.container}
-        contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + spacing.xl }]}
+        contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.md, paddingBottom: insets.bottom + spacing.xl }]}
         keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
         <Text style={styles.title}>{isNew ? t('form.title') : t('form.editTitle')}</Text>
 
@@ -180,7 +226,9 @@ export default function SubscriptionForm() {
               style={[styles.chip, cycle === c && styles.chipActive]}
               onPress={() => {
                 setCycle(c);
-                setNextDate(nextRenewalDate(new Date(), c).toISOString());
+                if (c !== 'custom') {
+                  setNextDate(nextRenewalDate(new Date(), c).toISOString());
+                }
               }}
             >
               <Text style={[styles.chipText, cycle === c && styles.chipTextActive]}>
@@ -189,10 +237,26 @@ export default function SubscriptionForm() {
             </TouchableOpacity>
           ))}
         </View>
+        {cycle === 'custom' && (
+          <>
+            <Text style={styles.label}>{t('cycle.days')}</Text>
+            <TextInput
+              style={styles.input}
+              value={customDays}
+              onChangeText={(v) => {
+                setCustomDays(v);
+                const n = parseInt(v, 10);
+                if (n > 0) setNextDate(nextRenewalDate(new Date(), 'custom', n).toISOString());
+              }}
+              keyboardType="number-pad"
+              placeholder="30"
+            />
+          </>
+        )}
 
         <Text style={styles.label}>{t('form.icon')}</Text>
         <View style={styles.chipRow}>
-          {EMOJIS.map((e) => (
+          {(EMOJIS.includes(icon) ? EMOJIS : [icon, ...EMOJIS]).map((e) => (
             <TouchableOpacity
               key={e}
               style={[styles.chip, icon === e && styles.chipActive]}
@@ -254,7 +318,7 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: colors.border, borderRadius: radius.md,
     padding: spacing.md, fontSize: 16, color: colors.text,
   },
-  notesInput: { height: 80, textAlignVertical: 'top' },
+  notesInput: { minHeight: 80, textAlignVertical: 'top' },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   chip: {
     paddingHorizontal: spacing.md, paddingVertical: spacing.sm,

@@ -7,15 +7,18 @@ import { useSubscriptions } from '../src/state/useSubscriptions';
 import { TotalCard } from '../src/components/TotalCard';
 import { SubscriptionRow } from '../src/components/SubscriptionRow';
 import { PaywallSheet } from '../src/components/PaywallSheet';
+import { TemplatePickerSheet } from '../src/components/TemplatePickerSheet';
 import { t } from '../src/i18n/strings';
 import { colors, spacing, radius } from '../constants/theme';
 import { daysUntil } from '../src/lib/renewals';
+import { Template } from '../src/lib/templates';
 
 export default function Dashboard() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { subs, loaded, atLimit } = useSubscriptions();
   const [showPaywall, setShowPaywall] = React.useState(false);
+  const [showPicker, setShowPicker] = React.useState(false);
   const [hasOnboarded, setHasOnboarded] = React.useState<boolean | null>(null);
 
   useEffect(() => {
@@ -36,7 +39,31 @@ export default function Dashboard() {
       setShowPaywall(true);
       return;
     }
-    router.push('/subscription/new');
+    setShowPicker(true);
+  };
+
+  const handlePickerSelect = (template: Template | null, existingId?: string) => {
+    setShowPicker(false);
+    if (existingId) {
+      // Already added → open edit form
+      router.push(`/subscription/${existingId}`);
+    } else if (template) {
+      // Known service → open new form pre-filled via query params
+      router.push({
+        pathname: '/subscription/new',
+        params: {
+          tplName: template.name,
+          tplPrice: String(template.price),
+          tplCurrency: template.currency,
+          tplCycle: template.cycle,
+          tplColor: template.color,
+          tplIcon: template.icon,
+        },
+      });
+    } else {
+      // Custom
+      router.push('/subscription/new');
+    }
   };
 
   return (
@@ -66,6 +93,12 @@ export default function Dashboard() {
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
       {showPaywall && <PaywallSheet onDismiss={() => setShowPaywall(false)} />}
+      <TemplatePickerSheet
+        visible={showPicker}
+        existingSubs={subs}
+        onSelect={handlePickerSelect}
+        onDismiss={() => setShowPicker(false)}
+      />
     </View>
   );
 }
@@ -77,7 +110,7 @@ const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
     right: spacing.lg,
-    bottom: spacing.lg, // insets.bottom ile override edilir
+    bottom: spacing.lg,
     width: 56,
     height: 56,
     borderRadius: 28,
@@ -92,3 +125,4 @@ const styles = StyleSheet.create({
   },
   fabText: { color: colors.white, fontSize: 28, lineHeight: 30 },
 });
+

@@ -12,7 +12,7 @@ interface Props {
 export function TotalCard({ subs }: Props) {
   const grouped: Record<string, number> = {};
   for (const s of subs) {
-    const eq = monthlyEquivalent(s.price, s.cycle);
+    const eq = monthlyEquivalent(s.price, s.cycle, s.customDays);
     grouped[s.currency] = (grouped[s.currency] || 0) + eq;
   }
   const entries = Object.entries(grouped);
