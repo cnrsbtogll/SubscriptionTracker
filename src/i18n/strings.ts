@@ -2,7 +2,7 @@ import { Subscription } from '../db/schema';
 
 const T = {
   en: {
-    'app.name': 'Subwise',
+    'app.name': 'Subscription Tracker',
     'onboarding.step1': 'Choose your subscriptions',
     'onboarding.step2': 'Review your amounts',
     'onboarding.step3': 'Enable notifications',
@@ -74,7 +74,7 @@ const T = {
     'picker.otherSub': 'Custom subscription',
   },
   tr: {
-    'app.name': 'Subwise',
+    'app.name': 'Subscription Tracker',
     'onboarding.step1': 'Aboneliklerini seç',
     'onboarding.step2': 'Tutarlarını gözden geçir',
     'onboarding.step3': 'Bildirimleri aç',
@@ -146,7 +146,7 @@ const T = {
     'picker.otherSub': 'Özel abonelik ekle',
   },
   de: {
-    'app.name': 'Subwise',
+    'app.name': 'Subscription Tracker',
     'onboarding.step1': 'Wähle deine Abonnements',
     'onboarding.step2': 'Überprüfe deine Beträge',
     'onboarding.step3': 'Benachrichtigungen aktivieren',
@@ -212,7 +212,7 @@ const T = {
     'common.loading': 'Lädt...',
   },
   fr: {
-    'app.name': 'Subwise',
+    'app.name': 'Subscription Tracker',
     'onboarding.step1': 'Choisissez vos abonnements',
     'onboarding.step2': 'Vérifiez vos montants',
     'onboarding.step3': 'Activer les notifications',
@@ -278,7 +278,7 @@ const T = {
     'common.loading': 'Chargement...',
   },
   es: {
-    'app.name': 'Subwise',
+    'app.name': 'Subscription Tracker',
     'onboarding.step1': 'Elige tus suscripciones',
     'onboarding.step2': 'Revisa tus importes',
     'onboarding.step3': 'Activar notificaciones',
@@ -344,7 +344,7 @@ const T = {
     'common.loading': 'Cargando...',
   },
   ar: {
-    'app.name': 'Subwise',
+    'app.name': 'Subscription Tracker',
     'onboarding.step1': 'اختر اشتراكاتك',
     'onboarding.step2': 'راجع مبالغك',
     'onboarding.step3': 'تفعيل الإشعارات',
