@@ -9,10 +9,10 @@
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.subwise.app"
+      "bundleIdentifier": "com.subwise.cnr"
     },
     "android": {
-      "package": "com.subwise.app",
+      "package": "com.subwise.cnr",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
