@@ -1,9 +1,9 @@
-# Privacy Policy for Subwise
+# Privacy Policy for Subscription Tracker
 
 **Last Updated:** September 16, 2026  
 **Effective Date:** September 16, 2026  
 
-At **Subwise** (developed by cnrsbtogll), we believe privacy is a fundamental human right. Subwise is designed from the ground up to be a **privacy-first, local-only** subscription and renewal tracker. 
+At **Subscription Tracker** (developed by cnrsbtogll), we believe privacy is a fundamental human right. Subscription Tracker is designed from the ground up to be a **privacy-first, local-only** subscription and renewal tracker. 
 
 We do not collect, transmit, sell, or monetize your personal data. Your financial details and subscription information never leave your device.
 
@@ -21,7 +21,7 @@ Unlike traditional financial management tools:
 
 ## 2. Information Stored on Your Device
 
-All data you enter into Subwise is stored **strictly locally** on your device using encrypted native storage (`AsyncStorage`):
+All data you enter into Subscription Tracker is stored **strictly locally** on your device using encrypted native storage (`AsyncStorage`):
 - Subscription names and service labels
 - Pricing, currencies, and billing cycles
 - Next renewal dates and notes
@@ -33,7 +33,7 @@ Because this data resides solely on your physical device, we (the developer) can
 
 ## 3. Device Permissions
 
-Subwise requests only the minimum permissions necessary to provide its core features:
+Subscription Tracker requests only the minimum permissions necessary to provide its core features:
 
 - **Notifications (`expo-notifications`):**  
   Used exclusively to schedule **local notifications** on your device to alert you before an upcoming renewal (e.g., 1 day or 7 days prior). These alerts are scheduled locally by the operating system; no push notification servers or tokens are used.
@@ -47,14 +47,14 @@ You can grant or revoke these permissions at any time via your device's system s
 ## 4. Data Retention, Backups, and Deletion
 
 - **Data Retention:** Your data remains stored on your device for as long as the application is installed.
-- **Data Deletion:** You can delete individual subscriptions at any time within the app. Uninstalling the Subwise application immediately and permanently removes all stored data from your device.
+- **Data Deletion:** You can delete individual subscriptions at any time within the app. Uninstalling the Subscription Tracker application immediately and permanently removes all stored data from your device.
 - **Backups:** If you use device-level cloud backups (such as Apple iCloud Backup or Google Drive Device Backup), your local application data may be included in your personal encrypted device backups according to your operating system's settings.
 
 ---
 
 ## 5. Children's Privacy
 
-Subwise is not directed to children under the age of 13. Since we do not collect any personal data whatsoever, we do not knowingly collect or maintain personal information from children.
+Subscription Tracker is not directed to children under the age of 13. Since we do not collect any personal data whatsoever, we do not knowingly collect or maintain personal information from children.
 
 ---
 
@@ -74,7 +74,7 @@ We may update this Privacy Policy from time to time to reflect changes in our pr
 
 ## 8. Contact Us
 
-If you have any questions, feedback, or concerns regarding this Privacy Policy or Subwise, please reach out:
+If you have any questions, feedback, or concerns regarding this Privacy Policy or Subscription Tracker, please reach out:
 
 - **GitHub Issues:** [https://github.com/cnrsbtogll/Subwise/issues](https://github.com/cnrsbtogll/Subwise/issues)
 - **Developer / Organization:** [https://github.com/cnrsbtogll](https://github.com/cnrsbtogll)
@@ -84,11 +84,11 @@ If you have any questions, feedback, or concerns regarding this Privacy Policy o
 <details>
 <summary><strong>🇹🇷 Türkçe Özet / Gizlilik Politikası Özeti</strong></summary>
 
-### Subwise Gizlilik Politikası (Özet)
+### Subscription Tracker Gizlilik Politikası (Özet)
 
 **Son Güncelleme:** 16 Eylül 2026
 
-**Subwise**, gizlilik öncelikli (privacy-first) ve tamamen yerel (offline/local-first) çalışan bir abonelik ve yenileme takip uygulamasıdır.
+**Subscription Tracker**, gizlilik öncelikli (privacy-first) ve tamamen yerel (offline/local-first) çalışan bir abonelik ve yenileme takip uygulamasıdır.
 
 1. **Veri Toplamama İlkesi:** Banka hesaplarınıza, kartlarınıza erişilmez. Hesap oluşturmanız, e-posta veya şifre vermeniz gerekmez. Verileriniz hiçbir harici sunucuya veya buluta aktarılmaz.
 2. **Yerel Depolama:** Eklediğiniz tüm abonelikler, tutarlar, para birimleri ve tarihler yalnızca cihazınızın kendi güvenli yerel hafızasında saklanır. Geliştirici dahil hiç kimse bu verilere erişemez.
