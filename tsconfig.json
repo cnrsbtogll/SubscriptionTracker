@@ -3,9 +3,16 @@
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "paths": {
       "@/*": ["./*"],
-      "@src/*": ["src/*"]
+      "@src/*": ["src/*"],
+      "src/*": ["src/*"],
+      "constants/*": ["constants/*"],
+      "lib/*": ["lib/*"],
+      "i18n/*": ["i18n/*"],
+      "db/*": ["db/*"],
+      "components/*": ["src/components/*"]
     },
     "types": ["jest"]
   },

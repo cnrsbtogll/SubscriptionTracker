@@ -1,0 +1,230 @@
+{
+  "status": "researched",
+  "researched_at": "2026-09-28T07:00:00+03:00",
+  "research_query": "pazar pazarlaması trend analizi rakip gözlemleme fırsat belirtileri 2026",
+  "candidates": [
+    {
+      "name": "AI Contract Scanner for Freelancers",
+      "slug": "ai-contract-scanner",
+      "concept": "Mobile AI app that scans contracts (PDF/photo/camera), flags risky clauses in plain language, and suggests negotiation points. On-device processing for privacy.",
+      "target_users": ["freelancers", "small business owners", "gig economy workers", "UAE/KSA remote workers"],
+      "problem": "Freelancers sign contracts they don't understand — 80% of standard clauses are risky, and legal review costs $300-800 per doc.",
+      "solution": "AI-powered clause risk detector with plain-English explanations, risk score (0-100), and specific negotiation suggestions per clause type.",
+      "mvp_features": ["PDF/text upload", "camera scan", "risk scoring", "clause highlight + plain-English explain", "negotiation script suggestions"],
+      "differentiation": ["On-device processing (no cloud)", "Turkish/Arabic contract language support", "gig-economy-specific clause templates (platform terms, NDA, SOW)"],
+      "competitors": ["Justee AI (web, $1-2/doc)", "LegalDeep AI", "Redline (iOS, $9.99/5 scans)", "LegalForge (document generation, not review)"],
+      "monetization": ["Freemium: 3 free scans/mo", "Pro: $9.99/mo unlimited scans + Q&A", "B2B: team plans for agencies"],
+      "technical_complexity": "medium",
+      "demand_evidence": ["QuestMobile: 499M AI app users in China, 85% YoY growth", "freelance market growing 22% YoY globally", "Justee AI reports $1-2/doc willingness to pay"],
+      "risks": ["Legal liability for incorrect advice", "Jurisdiction-specific nuance (Turkey vs UAE vs UK)", "On-device model accuracy vs cloud"],
+      "identity_initial_check": {"name": "clear", "github": "clear"},
+      "sources": [
+        {"url": "https://justee.ai/solutions/freelancer-contract-review", "title": "Justee AI - Freelancer Contract Review"},
+        {"url": "https://apps.apple.com/app/id6762101663", "title": "Redline: AI Contract Scanner - App Store"},
+        {"url": "https://www.legaldeepai.app/about", "title": "LegalDeep AI"}
+      ]
+    },
+    {
+      "name": "Subscription Tracker + Price-Hike Alert",
+      "slug": "subtracker-ai",
+      "concept": "Smart subscription tracker that auto-detects recurring charges, alerts on price hikes before renewal, and guides one-tap cancellation.",
+      "target_users": ["households spending $200+/mo on subs", "subscription fatigue users", "families sharing plans"],
+      "problem": "Average household spends $273/mo on subscriptions, can't recall 1/3 of them. Existing trackers either need bank login (privacy risk) or manual entry (too much work).",
+      "solution": "Email receipt parsing + bank statement CSV upload for auto-detection, price-hike alerts 14 days before renewal, one-tap cancel guidance.",
+      "mvp_features": ["email receipt parsing", "CSV/bank statement import", "price-hike alerts", "renewal calendar", "cancel flow guidance"],
+      "differentiation": ["No bank login required (privacy-first)", "Turkey-specific service catalog (Gain, Netflix TR, BluTV, Spotify TR)", "Family sharing detection"],
+      "competitors": ["Rocket Money (US only, $7-14/mo)", "Bobby (iOS only, manual)", "LowerMySubs (web, free)", "Subby (Android, $2.99 one-time)"],
+      "monetization": ["Free: up to 20 subs", "Premium: $4.99/mo unlimited + price-hike protection", "Family: $7.99/mo"],
+      "technical_complexity": "medium",
+      "demand_evidence": ["1,586 one-star reviews coded: 73% critical (≤3★)", "average household $273/mo subscriptions", "YNAB June 2026 UI backlash shows redesign fatigue"],
+      "risks": ["Bank/email credential security", "App store policy on subscription cancellations", "US-centric competitors dominating"],
+      "identity_initial_check": {"name": "clear", "github": "clear"},
+      "sources": [
+        {"url": "https://cashjot.com/blog/why-budgeting-apps-fail", "title": "Why Budgeting Apps Fail - 1586 Reviews Coded"},
+        {"url": "https://lowermysubs.com/blog/best-subscription-trackers-2026", "title": "Best Subscription Tracker 2026"},
+        {"url": "https://unstore.io/discover/best-apps-for-tracking-streaming-subscriptions-android", "title": "Best Subscription Tracking Apps Android 2026"}
+      ]
+    },
+    {
+      "name": "AI Form Coach (Camera-Based)",
+      "slug": "ai-form-coach",
+      "concept": "Real-time exercise form correction via phone camera — rep counting, posture feedback, injury risk warnings. No wearable needed.",
+      "target_users": ["home exercisers", "beginners afraid of injury", "post-rehab users"],
+      "problem": "Personal training costs $50-100/session. Existing AI fitness apps (Zing Coach, Strive) are iOS-heavy, expensive ($12.99/mo), and lack Turkish/Arabic language support.",
+      "solution": "On-device pose estimation for real-time form feedback, rep counting, and adaptive workout plans — cheaper than competitors with local language support.",
+      "mvp_features": ["camera form check (squat/pushup/deadlift)", "rep counter", "form score per set", "adaptive weekly plan", "injury risk alerts"],
+      "differentiation": ["Android-first + iOS", "Turkish/Arabic voice cues", "offline mode (no cloud needed)", "lower price point ($7.99/mo vs $12.99)"],
+      "competitors": ["Zing Coach ($12.99/mo, iOS-first)", "Strive ($12.99/mo)", "Freeletics", "Hoola", "Fitbod"],
+      "monetization": ["Free: 3 workouts/wk", "Premium: $7.99/mo unlimited", "Annual: $59.99/yr"],
+      "technical_complexity": "high",
+      "demand_evidence": ["State of Mobile 2026: fitness apps 2.4B downloads record", "AI fitness segment growing fastest in non-gaming", "646M internet users in Africa, smartphone market $34B"],
+      "risks": ["Pose estimation accuracy varies by body type", "Camera quality dependency", "Liability for injury advice"],
+      "identity_initial_check": {"name": "clear", "github": "clear"},
+      "sources": [
+        {"url": "https://getfitcraft.com/compare/best-ai-fitness-coach-app", "title": "Best AI Fitness Coach Apps 2026"},
+        {"url": "https://www.sensai.fit/blog/best-ai-workout-form-check-apps-2026", "title": "Best AI Workout Form Check Apps 2026"},
+        {"url": "https://gameindustrylibrary.com/documents/state-of-mobile-2026", "title": "State of Mobile 2026"}
+      ]
+    },
+    {
+      "name": "AI Finance Coach (Behavioral)",
+      "slug": "ai-finance-coach",
+      "concept": "Behavioral AI finance coach that spots spending patterns costing money — subscription creep, impulse triggers, timing overspending — not generic tips.",
+      "target_users": ["digital nomads multi-currency", "freelancers irregular income", "first-gen wealth builders", "Turkey's growing freelance economy"],
+      "problem": "Generic budgeting apps give static advice. Users need pattern recognition: 'You spend 34% more on weekends', 'Your subscription creep is $47/mo'.",
+      "solution": "AI that learns spending patterns, flags behavioral leaks, suggests specific interventions, multi-currency support for nomads.",
+      "mvp_features": ["spending pattern detection", "subscription creep alert", "impulse purchase flag", "weekly digest", "multi-currency wallet"],
+      "differentiation": ["Behavioral focus not category tracking", "Turkey bank integration (Garanti, Yapı Kredi, İş Bankası)", "freelancer income smoothing"],
+      "competitors": ["Rocket Money (US)", "YNAB ($14.99/mo)", "Monarch Money ($9.99/mo)", "Copilot"],
+      "monetization": ["Free: basic tracking", "Pro: $6.99/mo AI insights + multi-currency", "Freelancer plan: $9.99/mo income smoothing"],
+      "technical_complexity": "medium",
+      "demand_evidence": ["non-gaming app IAP revenue $19.4B Q1 2025, 23.7% YoY growth", "users expect AI personalization (59% per iTransition)", "freelance economy growing 22% globally"],
+      "risks": ["Bank API integration complexity by country", "Turkish banking regulation compliance", "Open Banking maturity varies"],
+      "identity_initial_check": {"name": "clear", "github": "clear"},
+      "sources": [
+        {"url": "https://lovable.dev/guides/tech-app-ideas-to-launch-2026", "title": "10 Winning Tech App Ideas 2026 - Lovable"},
+        {"url": "https://www.itransition.com/services/application/development/mobile/statistics", "title": "Mobile App Statistics 2026"},
+        {"url": "https://javascript.plainenglish.io/10-mobile-app-niches-that-still-have-massive-opportunity-in-2026-960aa079f895", "title": "10 Mobile App Niches 2026"}
+      ]
+    },
+    {
+      "name": "Vertical AI Companion (Elder Care)",
+      "slug": "ai-companion-elder",
+      "concept": "AI companionship app specifically for elderly users and their families — daily check-ins, medication reminders, emergency detection, family dashboard.",
+      "target_users": ["adult children caring for aging parents", "elderly living alone", "Turkey's aging population (13%+ over 65)"],
+      "problem": "Loneliness epidemic + aging population. General AI companions (Replika, Character.ai) aren't designed for elderly cognitive needs or family oversight.",
+      "solution": "Simplified UI for elderly, voice-first interaction, medication reminders, fall detection via phone sensors, family dashboard for children.",
+      "mvp_features": ["voice chat (simplified)", "medication reminders", "daily check-in prompts", "family activity dashboard", "emergency contact escalation"],
+      "differentiation": ["Elder-specific UI (large text, voice-first)", "family dashboard for children", "Turkish language + local emergency numbers"],
+      "competitors": ["Replika (general companion)", "Character.ai", "GrandCare (senior tech, expensive)"],
+      "monetization": ["Free: basic chat + reminders", "Premium: $9.99/mo family dashboard + emergency", "Annual family: $79.99/yr"],
+      "technical_complexity": "medium",
+      "demand_evidence": ["AI Companion revenue $150M Q1 2026, 12x growth since 2023", "mental health app market $7.48B 2024, 14.6% CAGR", "Turkey: 13%+ population over 65 and growing"],
+      "risks": ["Elderly adoption barrier", "Privacy for health data", "Emergency response liability"],
+      "identity_initial_check": {"name": "clear", "github": "clear"},
+      "sources": [
+        {"url": "https://sensortower.com/blog/state-of-ai-apps-in-apac-2026-report", "title": "State of AI Apps 2026 APAC Edition - Sensor Tower"},
+        {"url": "https://aeo.idaeo.ai/ai/sensortower-com/en/news/2026-05-28-report-2026-global-ai-app-trend-insights", "title": "2026 Global AI App Trend Insights"},
+        {"url": "https://makeanapplike.com/article/startups-fundraising/emerging-lifestyle-trends-app-opportunities", "title": "30 Emerging Lifestyle Trends App Opportunities 2026"}
+      ]
+    },
+    {
+      "name": "AI Diet Photo Logger",
+      "slug": "ai-diet-logger",
+      "concept": "Photo-based meal logging with AI nutrition estimation — snap a photo, get macros, calories, and diet adherence score. No manual entry.",
+      "target_users": ["weight loss users", "muscle gain trainees", "diabetics tracking meals", "Turkey's growing health-conscious demographic"],
+      "problem": "Manual food logging is the #1 reason diet apps get abandoned after 2 weeks. Existing apps require searching databases or typing.",
+      "solution": "Camera-first meal logging: photo → AI nutrition estimate → macro breakdown → daily score. 10-second workflow vs 2-minute manual entry.",
+      "mvp_features": ["photo meal capture", "AI macro estimation", "daily macro progress", "food database backup", "weekly trend report"],
+      "differentiation": ["Photo-first (no manual entry)", "Turkey-specific food database (peynir, ezine, etc.)", "integrates with AI Form Coach for body recomposition"],
+      "competitors": ["MyFitnessPal (manual entry)", "Cronometer", "Lose It!", "FatSecret"],
+      "monetization": ["Free: basic logging", "Premium: $5.99/mo AI estimates + Turkey food DB", "Pro: $9.99/mo coach integration"],
+      "technical_complexity": "medium",
+      "demand_evidence": ["Health & Fitness: 5,395 critical reviews across 402 apps (62% critical rate)", "AI nutrition estimation accuracy improving rapidly in 2026", "Turkey obesity rate 32% - large addressable market"],
+      "risks": ["Nutrition estimation accuracy", "Food database coverage for Turkish cuisine", "Medical disclaimer liability"],
+      "identity_initial_check": {"name": "clear", "github": "clear"},
+      "sources": [
+        {"url": "https://bigideasdb.com/profitable-mobile-app-ideas-2026", "title": "30 Most Profitable Mobile App Ideas 2026"},
+        {"url": "https://fawanews.org.uk/ai-mobile-app-ideas", "title": "AI Mobile App Ideas 2026"},
+        {"url": "https://makeanapplike.com/article/startups-fundraising/emerging-lifestyle-trends-app-opportunities", "title": "30 Emerging Lifestyle Trends 2026"}
+      ]
+    },
+    {
+      "name": "AI Short-Form Video Co-Pilot for Creators",
+      "slug": "ai-video-copilot",
+      "concept": "Mobile app that helps content creators edit, caption, and optimize short-form videos (TikTok/Reels/Shorts) using AI — script-to-video, auto-captions, trend hooks.",
+      "target_users": ["TikTok/Reels creators", "small business social media managers", "Turkey's growing creator economy"],
+      "problem": "Editing short-form video is time-consuming. Creators spend 3-5 hrs editing per 1 min video. AI tools exist but are desktop-focused or generic.",
+      "solution": "Mobile-first AI video editor: auto-cut dead air, generate captions, suggest hooks from trending audio, script-to-storyboard.",
+      "mvp_features": ["auto-cut editing", "AI captions (TR/EN)", "trending audio suggestions", "hook generator", "posting schedule optimizer"],
+      "differentiation": ["Mobile-first (not desktop port)", "Turkish trend/audio library", "small business focused (not just influencers)"],
+      "competitors": ["CapCut (desktop-first, generic)", "InShot (basic editing)", "Opus Clip (video-to-shorts, web)", "Vizard.ai"],
+      "monetization": ["Free: 3 exports/wk", "Pro: $9.99/mo unlimited", "Business: $24.99/mo team + analytics"],
+      "technical_complexity": "high",
+      "demand_evidence": ["short-drama apps captured >10% global video entertainment time (State of Mobile 2026)", "AI video segment growing 100%+ YoY", "Turkey creator economy growing 40%+ YoY"],
+      "risks": ["Video processing heavy on device", "Model costs for AI features", "Platform API dependency (TikTok/IG changes)"],
+      "identity_initial_check": {"name": "clear", "github": "clear"},
+      "sources": [
+        {"url": "https://gameindustrylibrary.com/documents/state-of-mobile-2026", "title": "State of Mobile 2026"},
+        {"url": "https://makeanapplike.com/article/startups-fundraising/emerging-lifestyle-trends-app-opportunities", "title": "30 Emerging Lifestyle Trends 2026"}
+      ]
+    },
+    {
+      "name": "Pet Health AI Triage",
+      "slug": "pet-health-ai",
+      "concept": "AI-powered pet symptom checker + vet appointment booking. Pet owners describe symptoms, get triage advice (emergency vs wait-and-see vs home care), and book vetted vets.",
+      "target_users": ["pet owners Turkey (15M+ pets)", "new pet owners anxious about symptoms", "expat pet owners in Turkey"],
+      "problem": "Pet owners Google symptoms at 2am, panic, or wait too long. Vet visits cost $50-200 for something that might be nothing. No trusted mobile triage exists in Turkish.",
+      "solution": "Symptom input → AI triage (emergency/urgent/routine/home care) → vet booking integration + pharmacy delivery.",
+      "mvp_features": ["symptom checker (text/voice)", "triage algorithm", "vet finder + booking", "pharmacy delivery integration", "pet health log"],
+      "differentiation": ["Turkish vet network integration", "no panic-mongering (responsible triage)", "pet insurance coordination"],
+      "competitors": ["PetDesk (US, appointment booking)", "Vetster (telehealth)", "PetMD (web, US-centric)"],
+      "monetization": ["Free: triage + vet finder", "Premium: $4.99/mo health log + pharmacy discounts", "Commission: vet booking fee"],
+      "technical_complexity": "medium",
+      "demand_evidence": ["pet care market $158B US industry 2025", "pet ownership rising globally, Turkey 15M+ pets", "vet telehealth growing post-COVID"],
+      "risks": ["Medical liability for wrong triage", "Turkish veterinary regulation", "vet network coverage outside Istanbul/Ankara"],
+      "identity_initial_check": {"name": "clear", "github": "clear"},
+      "sources": [
+        {"url": "https://bigideasdb.com/profitable-mobile-app-ideas-2026", "title": "30 Most Profitable Mobile App Ideas 2026"},
+        {"url": "https://javascript.plainenglish.io/10-mobile-app-niches-that-still-have-massive-opportunity-in-2026-960aa079f895", "title": "10 Mobile App Niches 2026"}
+      ]
+    },
+    {
+      "name": "AI Resume Builder + Job Match",
+      "slug": "ai-resume-jobmatch",
+      "concept": "Mobile app that builds ATS-optimized resumes from a photo of any resume/CV, scores match against job descriptions, and suggests improvements.",
+      "target_users": ["job seekers Turkey", "career switchers", "fresh graduates", "Ukrainian refugees entering Turkish job market"],
+      "problem": "75% of resumes rejected by ATS before human sees them. Job seekers don't know how to optimize. Existing tools are desktop/web, expensive, English-only.",
+      "solution": "Photo resume → AI parse → ATS optimization + job match score + improvement suggestions. Turkish job market focused.",
+      "mvp_features": ["resume photo → text (OCR)", "ATS score", "job description match", "keyword suggestions", "Turkish/English bilingual"],
+      "differentiation": ["Turkish job market (İş Bankası, Kariyer.net integration)", "refugee-friendly (Ukrainian CV support)", "mobile-first (apply from phone)"],
+      "competitors": ["Resume.io (web, expensive)", "Canva Resume (generic)", "LinkedIn Jobs (no resume optimization)", "Zety (web)"],
+      "monetization": ["Free: 1 resume + 5 job matches", "Premium: $6.99/mo unlimited resumes + match", "Pro: $14.99/mo interview prep AI"],
+      "technical_complexity": "medium",
+      "demand_evidence": ["Turkey unemployment 10%+ youth unemployment 20%+", "refugee population 3.6M needing job integration", "AI job market tools growing 2026"],
+      "risks": ["ATS algorithm changes", "job board API access", "data privacy (CV personal data)"],
+      "identity_initial_check": {"name": "clear", "github": "clear"},
+      "sources": [
+        {"url": "https://bigideasdb.com/profitable-mobile-app-ideas-2026", "title": "30 Most Profitable Mobile App Ideas 2026"},
+        {"url": "https://lovable.dev/guides/tech-app-ideas-to-launch-2026", "title": "10 Winning Tech App Ideas 2026"}
+      ]
+    },
+    {
+      "name": "AI Trip Planner (Budget Travel Turkey)",
+      "slug": "ai-trip-planner",
+      "concept": "Mobile AI trip planner optimized for Turkey's domestic travel market — itinerary generation, budget tracking, local vendor booking, offline maps.",
+      "target_users": ["Turkish domestic tourists", "budget travelers in Turkey", "expats exploring Turkey", "Ramadan/Eid holiday travelers"],
+      "problem": "Turkey domestic tourism booming (50M+ domestic trips/year) but planning tools are either generic (Google Trips dead) or hotel-focused (Booking.com). No AI-native Turkish trip planner.",
+      "solution": "AI generates day-by-day itineraries based on budget, interests, and travel style with real-time pricing for transport + accommodation + activities.",
+      "mvp_features": ["AI itinerary generator", "budget tracker", "transport booking integration", "offline maps", "seasonal event recommendations"],
+      "differentiation": ["Turkey-first (not generic travel)", "domestic focus (buses, dolmuş, local stays)", "Ramadan/Eid travel patterns", "offline-first for rural areas"],
+      "competitors": ["TripIt (general, US-centric)", "Google Travel (deprecating)", "Booking.com (hotel only)", "GetYourGuide (activities only)"],
+      "monetization": ["Free: basic itinerary", "Premium: $7.99/mo AI optimization + booking", "Affiliate commission: hotels, tours, car rentals"],
+      "technical_complexity": "medium",
+      "demand_evidence": ["Turkey: 50M+ domestic trips/year, growing", "mobile travel booking 70%+ of travel searches", "State of Mobile 2026: non-gaming surpassing games revenue"],
+      "risks": ["Travel booking API partnerships", "seasonal demand variation", "offline coverage in rural Turkey"],
+      "identity_initial_check": {"name": "clear", "github": "clear"},
+      "sources": [
+        {"url": "https://www.itransition.com/services/application/development/mobile/statistics", "title": "Mobile App Statistics 2026"},
+        {"url": "https://gameindustrylibrary.com/documents/state-of-mobile-2026", "title": "State of Mobile 2026"}
+      ]
+    }
+  ],
+  "sources": [
+    {"url": "https://bigideasdb.com/profitable-mobile-app-ideas-2026", "title": "30 Most Profitable Mobile App Ideas 2026 - BigIdeasDB"},
+    {"url": "https://sensortower.com/blog/state-of-ai-apps-in-apac-2026-report", "title": "State of AI Apps 2026 APAC Edition - Sensor Tower"},
+    {"url": "https://aeo.idaeo.ai/ai/sensortower-com/en/news/2026-05-28-report-2026-global-ai-app-trend-insights", "title": "2026 Global AI App Trend Insights"},
+    {"url": "https://gameindustrylibrary.com/documents/state-of-mobile-2026", "title": "State of Mobile 2026"},
+    {"url": "https://www.itransition.com/services/application/development/mobile/statistics", "title": "Mobile App Statistics 2026 - iTransition"},
+    {"url": "https://fawanews.org.uk/ai-mobile-app-ideas", "title": "AI Mobile App Ideas 2026"},
+    {"url": "https://makeanapplike.com/article/startups-fundraising/emerging-lifestyle-trends-app-opportunities", "title": "30 Emerging Lifestyle Trends App Opportunities 2026"},
+    {"url": "https://lovable.dev/guides/tech-app-ideas-to-launch-2026", "title": "10 Winning Tech App Ideas 2026"},
+    {"url": "https://javascript.plainenglish.io/10-mobile-app-niches-that-still-have-massive-opportunity-in-2026-960aa079f895", "title": "10 Mobile App Niches 2026"},
+    {"url": "https://cashjot.com/blog/why-budgeting-apps-fail", "title": "Why Budgeting Apps Fail - 1586 Reviews Coded"},
+    {"url": "https://lowermysubs.com/blog/best-subscription-trackers-2026", "title": "Best Subscription Tracker 2026"},
+    {"url": "https://justee.ai/solutions/freelancer-contract-review", "title": "Justee AI - Freelancer Contract Review"},
+    {"url": "https://getfitcraft.com/compare/best-ai-fitness-coach-app", "title": "Best AI Fitness Coach Apps 2026"},
+    {"url": "https://www.sensai.fit/blog/best-ai-workout-form-check-apps-2026", "title": "Best AI Workout Form Check Apps 2026"},
+    {"url": "https://code-brew.ae/dubai-ai-mobile-apps-2026", "title": "Dubai AI Mobile Apps 2026"}
+  ]
+}

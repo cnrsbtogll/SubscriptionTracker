@@ -1,16 +1,28 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
+import { Subscription, Currency } from '../db/schema';
 import { colors, spacing, radius } from '../../constants/theme';
 import { t } from '../i18n/strings';
-import { Subscription, Currency } from '../db/schema';
 import { monthlyEquivalent } from '../lib/renewals';
 import { formatPrice } from '../lib/currencies';
+import { STORAGE_KEY } from '../lib/constants';
 
 interface Props {
   subs: Subscription[];
 }
 
 export function TotalCard({ subs }: Props) {
+  const router = useRouter();
+  const [hasOnboarded, setHasOnboarded] = React.useState<boolean | null>(null);
+
+  React.useEffect(() => {
+    AsyncStorage.getItem(STORAGE_KEY + ':hasOnboarded').then((v) => {
+      setHasOnboarded(v === 'true');
+    });
+  }, []);
+
   const grouped: Record<string, number> = {};
   for (const s of subs) {
     const eq = monthlyEquivalent(s.price, s.cycle, s.customDays);
@@ -22,7 +34,13 @@ export function TotalCard({ subs }: Props) {
     <View style={styles.card}>
       <Text style={styles.label}>{t('dashboard.total')}</Text>
       {entries.length === 0 ? (
-        <Text style={styles.amount}>₺0.00</Text>
+        hasOnboarded ? (
+          <Text style={styles.amount}>₺0.00</Text>
+        ) : (
+          <Text style={styles.amount}>
+            {t('onboarding.step1')}
+          </Text>
+        )
       ) : (
         entries.map(([currency, total]) => (
           <Text key={currency} style={styles.amount}>
