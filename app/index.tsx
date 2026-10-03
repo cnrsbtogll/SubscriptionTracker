@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSubscriptions } from '../src/state/useSubscriptions';
 import { TotalCard } from '../src/components/TotalCard';
@@ -16,17 +16,23 @@ import { Template } from '../src/lib/templates';
 export default function Dashboard() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { subs, loaded, atLimit } = useSubscriptions();
+  const { subs, loaded, atLimit, load } = useSubscriptions();
   const [showPaywall, setShowPaywall] = React.useState(false);
   const [showPicker, setShowPicker] = React.useState(false);
   const [hasOnboarded, setHasOnboarded] = React.useState<boolean | null>(null);
 
-  useEffect(() => {
-    AsyncStorage.getItem('hasOnboarded').then((v) => {
-      if (!v) router.replace('/onboarding');
-      else setHasOnboarded(true);
-    });
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      AsyncStorage.getItem('hasOnboarded').then((v) => {
+        if (!v) {
+          router.replace('/onboarding');
+        } else {
+          setHasOnboarded(true);
+          load();
+        }
+      });
+    }, [router, load])
+  );
 
   if (hasOnboarded === null) return null;
 

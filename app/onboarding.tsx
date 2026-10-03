@@ -21,7 +21,7 @@ export default function OnboardingScreen() {
         currency: tpl.currency as Currency,
         cycle: 'monthly',
         nextRenewal: nextRenewalDate(new Date(), 'monthly').toISOString(),
-        color: '#6366F1',
+        color: tpl.color,
         icon: tpl.icon,
         notes: '',
       });
